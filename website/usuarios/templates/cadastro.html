@@ -19,8 +19,16 @@
     <input type="hidden" name="user" value={{user.username}}>
     <label>Username:</label><br>
     <input type="text" class="pergunta" name="username" id="username" placeholder="Username" value="{{usuario_dados.username}}" required><br>
-    <label>Avatar:</label><br>
-    <input type="file" class="pergunta_img" name="avatar" id="avatar" placeholder="oque"><br>
+    
+    <label>Carregar imagem:</label><br>
+    <input type="file" class="pergunta" name="avatar" id="avatar" accept="image/*"><br>
+
+    <label>Imagem de perfil:</label><br>
+    <img style="width: 500px;" height="500px" id="preview" class="pergunta"
+        src="{% if usuario_dados.avatar %}{{ usuario_dados.avatar.url }}{% else %}{% static 'img/default-avatar.jpg' %}{% endif %}"
+        alt="Avatar do usuário" /><br>
+    
+    
     <label>Email:</label><br>
     <input type="email" class="pergunta" name="email" id="email" value="{{usuario_dados.email}}" placeholder="seu_email@gmail.com"><br>
     <label>Senha:</label><br>
@@ -40,5 +48,20 @@
       <br>
   </form>
 </div>
+
+<script>
+document.getElementById('avatar').addEventListener('change', function(event) {
+
+    const file = event.target.files[0];
+    const preview = document.getElementById('preview');
+
+    if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.onload = () => {
+            URL.revokeObjectURL(preview.src);
+        }
+    }
+});
+</script>
 {% endblock %}
 

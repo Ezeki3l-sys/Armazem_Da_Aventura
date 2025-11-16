@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from website.institucional.models import Slideshow
-from website.area_administrativa.models import Campanha, Usuario, CampanhaJogador
+from website.area_administrativa.models import Campanha, Usuario, Personagem, CampanhaJogador
 from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.messages import constants
@@ -18,6 +18,7 @@ def home(request):
 
 def explorar_campanhas(request):
   # Todas as campanhas, exceto as que o usuário é mestre
+    meus_personagens = Personagem.objects.filter(usuario=request.user)
     todas_campanhas = (
         Campanha.objects
         .all()
@@ -49,6 +50,7 @@ def explorar_campanhas(request):
         'campanhas': todas_campanhas,
         'pesquisa': pesquisar,
         'minhas_campanhas': minhas_campanhas_ids,
+        'meus_personagens': meus_personagens,
     }
 
     return render(request, 'explorar_campanhas.html', contexto)

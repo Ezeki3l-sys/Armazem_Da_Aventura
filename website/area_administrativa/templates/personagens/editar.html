@@ -13,8 +13,13 @@
   {% csrf_token %}
   <label>Nome:</label><br>
   <input type="text" name="nome_personagem" value="{{personagem.nome_personagem}}" required><br>
-  <label>Avatar:</label><br>
-  <input type="file" name="avatar_personagem"><br>
+  <label>Carregar imagem:</label><br>
+    <input type="file" class="pergunta" name="avatar_personagem" id="avatar_personagem" accept="image/*"><br>
+
+    <label>Imagem de perfil:</label><br>
+    <img style="width: 500px;" height="500px" id="preview" class="pergunta"
+        src="{% if personagem.avatar_personagem %}{{ personagem.avatar_personagem.url }}{% endif %}"
+        alt="Avatar do Personagem" /><br>
   <label>Raça:</label><br>
   <input type="text" name="raca" value="{{personagem.raca}}"><br>
   <label>Classe:</label><br>

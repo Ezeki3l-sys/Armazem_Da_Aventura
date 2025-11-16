@@ -13,8 +13,13 @@
   {% csrf_token %}
   <label>Nome:</label><br>
   <input type="text" name="nome_campanha" class="pergunta" value="{{campanha.nome_campanha}}" required><br>
-  <label>Imagem:</label><br>
-  <input type="file" class="pergunta" name="imagem_de_capa"><br>
+  <label>Carregar imagem:</label><br>
+    <input type="file" class="pergunta" name="imagem_de_capa" id="imagem_de_capa" accept="image/*"><br>
+
+    <label>Imagem de perfil:</label><br>
+    <img style="width: 500px;" height="500px" id="preview" class="pergunta"
+        src="{% if campanha.imagem_de_capa %}{{ campanha.imagem_de_capa.url }}{% endif %}"
+        alt="Avatar do Personagem" /><br>
   <label>Data de Inicio:</label><br>
   <input type="date" class="pergunta" name="data_inicio" value="{{campanha.data_inicio}}"><br>
   <label>Data do Inicio:</label><br>
@@ -23,4 +28,19 @@
   <textarea class="pergunta" name="descricao">{{campanha.descricao}}</textarea><br>
   <button type="submit" class="btn btn-primary">Salvar</button>
 </form>
+
+<script>
+document.getElementById('imagem_de_capa').addEventListener('change', function(event) {
+
+    const file = event.target.files[0];
+    const preview = document.getElementById('preview');
+
+    if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.onload = () => {
+            URL.revokeObjectURL(preview.src);
+        }
+    }
+});
+</script>
 {% endblock %}

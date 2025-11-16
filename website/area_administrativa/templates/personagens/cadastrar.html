@@ -18,8 +18,18 @@
   <input type="hidden" name="user" value={{user.username}}>
   <label>Nome:</label><br>
   <input class="pergunta" type="text" name="nome_personagem" required><br>
-  <label>Avatar:</label><br>
-  <input class="pergunta" type="file" name="avatar_personagem" required><br>
+
+   <label>Carregar imagem:</label><br>
+    <input type="file" class="pergunta" name="avatar_personagem" id="avatar_personagem" accept="image/*"><br>
+
+    <label>Imagem de perfil:</label><br>
+    <img style="width: 500px;" height="500px" id="preview" class="pergunta"
+        src="{% if personagem.avatar_personagem %}{{ personagem.avatar_personagem.url }}{% else %}{% static 'img/default-avatar.jpg' %}{% endif %}"
+        alt="Avatar do Personagem" /><br>
+
+  
+  <!-- <label>Avatar:</label><br>
+  <input class="pergunta" type="file" name="avatar_personagem" required><br> -->
   <label>Raça:</label><br>
   <input class="pergunta" type="text" name="raca"><br>
   <label>Classe:</label><br>
@@ -40,6 +50,21 @@
   <textarea class="pergunta" name="historia"></textarea><br>
   <button  type="submit" class="botao">Cadastrar</button>
 </form>
+
+<script>
+document.getElementById('avatar_personagem').addEventListener('change', function(event) {
+
+    const file = event.target.files[0];
+    const preview = document.getElementById('preview');
+
+    if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.onload = () => {
+            URL.revokeObjectURL(preview.src);
+        }
+    }
+});
+</script>
 {% endblock %}
 {% comment %} 
 {% if erro %}<p style="color:red;">{{ erro }}</p>{% endif %}
