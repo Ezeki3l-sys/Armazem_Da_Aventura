@@ -20,10 +20,10 @@
   <input class="pergunta" type="text" name="nome_personagem"><br>
 
    <label>Carregar imagem:</label><br>
-    <input type="file" class="pergunta" name="avatar_personagem" id="avatar_personagem" accept="image/*"><br>
+    <input type="file" class="pergunta" name="avatar_personagem" id="avatar_personagem" accept="image/*" required><br>
 
     <label>Imagem de perfil:</label><br>
-    <img style="width: 500px;" height="500px" id="preview" class="pergunta"
+    <img id="preview" class="pergunta preview_img"
         src="{% if personagem.avatar_personagem %}{{ personagem.avatar_personagem.url }}{% else %}{% static 'img/default-avatar.jpg' %}{% endif %}"
         alt="Avatar do Personagem" /><br>
 

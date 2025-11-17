@@ -159,7 +159,7 @@ ul{
     border: 5px solid rgb(255, 255, 255);
     
 }
- .perfil{
+.perfil{
     display: flex;
     justify-content: space-evenly;
     padding: 40px;
@@ -168,7 +168,6 @@ ul{
     border: 3px solid var(--cor-destaque);
     border-radius: 100% ;
     width: 300px;
-    
 }
 .descricao_usuario {
     text-align: start;
@@ -264,7 +263,6 @@ i.bi{
     border: 1px solid var(--cor-destaque);
     margin: 10px;
     color: var(--cor-texto);
-    max-width: fit-content;
     justify-content: center;
 }
 .pergunta_img{
@@ -494,4 +492,6 @@ span{
         flex-direction: column;
     }
 }
-
+.preview_img{
+    max-width: 300px;
+}

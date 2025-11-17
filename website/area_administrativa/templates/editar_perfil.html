@@ -34,7 +34,7 @@
     {% endif %} -->
     <br/>
     <label>Carregar imagem:</label><br>
-    <input type="file" class="pergunta" name="avatar" id="avatar" accept="image/*" placeholder="..."><br>
+    <input type="file" class="pergunta" name="avatar" id="avatar" accept="image/*" placeholder="..." required><br>
     <label>Imagem de perfil:</label><br>
    
     <img id="preview" class="pergunta" src="{% if usuario_dados.avatar %}{{ usuario_dados.avatar.url }}{% else %}{% static 'img/default-avatar.jpg' %}{% endif %}" alt="Avatar do usuário" /><br>
