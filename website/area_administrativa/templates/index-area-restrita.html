@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
+{% load remover_espaco %}
 {% block 'conteudo' %}
 {% block 'title' %}Seu Perfil{% endblock %}
 <div class="container">
     <h2 class="titulos_entrada">Perfil de {{request.user}}</h2>
     <main class="perfil">
         <div>
+
             {% if user.avatar %}
                 <div class="bordinha"><img src="{{ user.avatar.url }}" alt="Avatar"></div>
                
@@ -33,8 +35,7 @@
         </a>        
         </div>
         <div class="coluna">
-                <textarea style="width: min-content;" class="descricao_usuario" name="cunserva" id="corovenha" readonly disabled>{{ user.bio }}</textarea>
-
+                <textarea class="descricao_usuario" name="cunserva" id="corovenha" readonly disabled>{{user.bio|trim }}</textarea>
             <div class="ascoisadele">
                 <div>
                     <h2 class="px-3">MINHAS CAMPANHAS</h2>

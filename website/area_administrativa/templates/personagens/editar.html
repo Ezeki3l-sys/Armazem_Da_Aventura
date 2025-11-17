@@ -21,11 +21,11 @@
         src="{% if personagem.avatar_personagem %}{{ personagem.avatar_personagem.url }}{% endif %}"
         alt="Avatar do Personagem" /><br>
   <label>Raça:</label><br>
-  <input type="text" name="raca" value="{{personagem.raca}}"><br>
+  <input type="text" name="raca" value="{{personagem.raca}}" required><br>
   <label>Classe:</label><br>
-  <input type="text" name="classe" value="{{personagem.classe}}"><br>
+  <input type="text" name="classe" value="{{personagem.classe}}" required><br>
   <label>História:</label><br>
-  <textarea name="historia">{{personagem.historia}}</textarea><br>
+  <textarea name="historia" required>{{personagem.historia}}</textarea><br>
   <button type="submit" class="btn btn-primary">Salvar</button>
 </form>
 {% endblock %}

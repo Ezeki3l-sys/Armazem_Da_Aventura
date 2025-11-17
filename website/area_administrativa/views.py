@@ -8,8 +8,12 @@ from django.contrib.messages import constants
 from .models import Personagem, Classe, Campanha, Usuario, PedidoParticipacaoCampanha, CampanhaJogador
 from datetime import datetime
 import json
-from django.core.serializers.json import DjangoJSONEncoder
+from django.conf.urls.static import static
+from website.settings import STATIC_URL
+import os
 
+from django.core.serializers.json import DjangoJSONEncoder
+AVATAR_DEFAULT =  os.path.join(STATIC_URL, 'img/default-avatar.jpg')
 # Create your views here.
 # def home(request):
 #     return HttpResponse(f"<h1>Hello</h1>")
@@ -21,8 +25,7 @@ def home(request):
     minhas_campanhas = Campanha.objects.filter(mestre=request.user).order_by('nome_campanha')
     quantidade_solicitacoes = PedidoParticipacaoCampanha.objects.filter(mestre=request.user).filter(status='P').count()
     quantidade_solicitacoes_jogador = PedidoParticipacaoCampanha.objects.filter(personagem__usuario=request.user).count()
-    return render(request, "index-area-restrita.html", {'personagens': meus_personagens,'campanhas': minhas_campanhas,'quantidade_solicitacoes':quantidade_solicitacoes, 'quantidade_solicitacoes_jogador': quantidade_solicitacoes_jogador})
-
+    return render(request, "index-area-restrita.html", {'personagens': meus_personagens,'campanhas': minhas_campanhas,'quantidade_solicitacoes':quantidade_solicitacoes, 'quantidade_solicitacoes_jogador': quantidade_solicitacoes_jogador, 'AVATAR_DEFAULT':AVATAR_DEFAULT})
 @login_required
 def editar_perfil(request, id):
     usuario = get_object_or_404(Usuario, id=id)
@@ -51,6 +54,7 @@ def meus_personagens(request):
 
 @login_required
 def cadastrar_personagem(request):
+    print(STATIC_URL)
     if request.method == 'POST':
         nome = request.POST.get('nome_personagem')
         avatar = request.FILES.get('avatar_personagem')
@@ -58,7 +62,10 @@ def cadastrar_personagem(request):
         var_classe = request.POST.get('classe')
         historia = request.POST.get('historia')
 
-        instancia_classe =  Classe.objects.get(nome_classe=var_classe)
+        instancia_classe = Classe.objects.get(nome_classe=var_classe)
+
+        if not(avatar):
+            avatar = AVATAR_DEFAULT
 
         personagem = Personagem.objects.create(
             usuario=request.user,

@@ -18,7 +18,7 @@ class Classe(models.Model):
 class Personagem(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING, blank = True, null = True)
     nome_personagem = models.CharField(verbose_name ="personagem",max_length=50, blank=False, null=False,)
-    avatar_personagem = models.ImageField(verbose_name ="avatar", upload_to='personagens/')
+    avatar_personagem = models.ImageField(verbose_name ="avatar", upload_to='personagens/', default="avatar/default-avatar.jpg")
     raca = models.CharField(verbose_name ="raça",max_length=50, blank=True, null=True,)
     classe = models.ForeignKey(Classe, on_delete=models.DO_NOTHING, blank = True, null = True, related_name="personagens" )
     vida = models.PositiveIntegerField(verbose_name='vida',blank=False,null=False, default=10)

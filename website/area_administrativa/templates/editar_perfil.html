@@ -41,7 +41,7 @@
 
     <label>Eh mestre?:</label><br>
     <input class="form-check-input" type="checkbox" name="eh_mestre"  id="myCheckboxMestre" {% if usuario_dados.mestre %}checked{% endif %} value="mestre"><br>
-    <textarea  class="pergunta" placeholder="Biografia..." name="bio" id="bio" cols="30" rows="10">
+    <textarea  class="pergunta" placeholder="Biografia..." name="bio" id="bio" cols="30" rows="10" required>
          {% if usuario_dados.bio %}
           {{usuario_dados.bio}}
         {% endif %}

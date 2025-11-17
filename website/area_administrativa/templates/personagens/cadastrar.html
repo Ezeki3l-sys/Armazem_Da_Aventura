@@ -17,7 +17,7 @@
   {% csrf_token %}
   <input type="hidden" name="user" value={{user.username}}>
   <label>Nome:</label><br>
-  <input class="pergunta" type="text" name="nome_personagem" required><br>
+  <input class="pergunta" type="text" name="nome_personagem"><br>
 
    <label>Carregar imagem:</label><br>
     <input type="file" class="pergunta" name="avatar_personagem" id="avatar_personagem" accept="image/*"><br>
@@ -31,12 +31,12 @@
   <!-- <label>Avatar:</label><br>
   <input class="pergunta" type="file" name="avatar_personagem" required><br> -->
   <label>Raça:</label><br>
-  <input class="pergunta" type="text" name="raca"><br>
+  <input class="pergunta" type="text" name="raca" required><br>
   <label>Classe:</label><br>
   
 
   <label for="classe">Escolha a classe:</label>
-  <input list="classes" name="classe" id="classe"  autocomplete="off" >
+  <input list="classes" name="classe" id="classe"  autocomplete="off" required>
   <datalist id="classes">
     {% for c in toda_classes %}
       <option value="{{c.nome_classe}}">
@@ -47,7 +47,7 @@
   </datalist>
 <br>
   <label>História:</label><br>
-  <textarea class="pergunta" name="historia"></textarea><br>
+  <textarea class="pergunta" name="historia" required></textarea><br>
   <button  type="submit" class="botao">Cadastrar</button>
 </form>
 

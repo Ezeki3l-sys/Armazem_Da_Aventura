@@ -21,9 +21,9 @@
         src="{% if campanha.imagem_de_capa %}{{ campanha.imagem_de_capa.url }}{% endif %}"
         alt="Avatar do Personagem" /><br>
   <label>Data de Inicio:</label><br>
-  <input type="date" class="pergunta" name="data_inicio" value="{{campanha.data_inicio}}"><br>
+  <input type="date" class="pergunta" name="data_inicio" value="{{campanha.data_inicio}}" required><br>
   <label>Data do Inicio:</label><br>
-  <input type="date" class="pergunta" name="data_fim" value="{{campanha.data_fim}}"><br>
+  <input type="date" class="pergunta" name="data_fim" value="{{campanha.data_fim}}" required><br>
   <label>Descrição:</label><br>
   <textarea class="pergunta" name="descricao">{{campanha.descricao}}</textarea><br>
   <button type="submit" class="btn btn-primary">Salvar</button>
