@@ -146,7 +146,7 @@ ul{
 
  /* Parte da área restrita */
  .card img{
-    width: 286px;
+    /*width: 286px;*/
     height: 171px;
  }
  #dados img:hover {
