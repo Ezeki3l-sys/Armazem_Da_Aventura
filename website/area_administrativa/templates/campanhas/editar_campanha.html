@@ -17,7 +17,7 @@
     <input type="file" class="pergunta" name="imagem_de_capa" id="imagem_de_capa" accept="image/*" required><br>
 
     <label>Imagem de perfil:</label><br>
-    <img style="width: 500px;" height="500px" id="preview" class="pergunta"
+    <img id="preview" class="preview_img"
         src="{% if campanha.imagem_de_capa %}{{ campanha.imagem_de_capa.url }}{% endif %}"
         alt="Avatar do Personagem" /><br>
   <label>Data de Inicio:</label><br>

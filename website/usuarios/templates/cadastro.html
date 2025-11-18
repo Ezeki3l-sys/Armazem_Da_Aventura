@@ -24,7 +24,7 @@
     <input type="file" class="pergunta" name="avatar" id="avatar" accept="image/*" required><br>
 
     <label>Imagem de perfil:</label><br>
-    <img style="width: 500px;" height="500px" id="preview" class="pergunta"
+    <img  id="preview" class="preview_img"
         src="{% if usuario_dados.avatar %}{{ usuario_dados.avatar.url }}{% else %}{% static 'img/default-avatar.jpg' %}{% endif %}"
         alt="Avatar do usuário" /><br>
     

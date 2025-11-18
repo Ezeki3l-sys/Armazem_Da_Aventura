@@ -23,8 +23,6 @@ def explorar_campanhas(request):
         meus_personagens = Personagem.objects.filter(usuario=request.user)
     except:
         meus_personagens = []
-           
-    
     
     todas_campanhas = (
         Campanha.objects
@@ -57,8 +55,8 @@ def explorar_campanhas(request):
         'campanhas': todas_campanhas,
         'pesquisa': pesquisar,
         'minhas_campanhas': minhas_campanhas_ids,
-        'meus_personagens': meus_personagens,
-        'qtd_personagem': meus_personagens.count()
+        'meus_personagens': meus_personagens ,
+        'qtd_personagem':  len(meus_personagens) 
     }
 
     return render(request, 'explorar_campanhas.html', contexto)
