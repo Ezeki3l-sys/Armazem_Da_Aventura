@@ -158,7 +158,6 @@ MESSAGE_TAGS = {
 }
 
 
-LOGIN_URL = 'login'
+LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'area_restrita'
-LOGOUT_REDIRECT_URL = 'login'
-
+LOGOUT_REDIRECT_URL = 'accounts:login'

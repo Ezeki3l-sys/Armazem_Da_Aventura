@@ -45,6 +45,9 @@ def editar_perfil(request, id):
 
 @login_required
 def meus_personagens(request):
+    # if not request.user.is_authenticated:
+    #     return redirect('accounts:login')
+    
     meus_personagens = Personagem.objects.filter(usuario=request.user).order_by('nome_personagem')
     if request.method == 'GET':
         return render(request, 'personagens/index.html', {'personagens': meus_personagens,  'pesquisa': ''})

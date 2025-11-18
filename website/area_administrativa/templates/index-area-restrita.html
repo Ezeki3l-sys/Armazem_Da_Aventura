@@ -26,13 +26,15 @@
                 <span class="visually-hidden">solicitações não lidas</span>
             </span>
         </a>
-        <a href="{% url 'solicitacoes_jogador' %}"  type="button" class="btn btn-info position-relative" {%if quantidade_solicitacoes_jogador == 0 %}style="display: none;"{% endif %}>
-            Seus pedidos
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                {{ quantidade_solicitacoes_jogador }}
-                <span class="visually-hidden">solicitações para você</span>
-            </span>
-        </a>        
+            <div class="mb-2">
+                <a href="{% url 'solicitacoes_jogador' %}"  type="button" class="btn btn-info position-relative" {%if quantidade_solicitacoes_jogador == 0 %}style="display: none;"{% endif %}>
+                    Seus pedidos
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ quantidade_solicitacoes_jogador }}
+                        <span class="visually-hidden">solicitações para você</span>
+                    </span>
+                </a> 
+            </div>     
         </div>
         <div class="coluna">
                 <textarea class="descricao_usuario" name="cunserva" id="corovenha" readonly disabled>{{user.bio|trim }}</textarea>
