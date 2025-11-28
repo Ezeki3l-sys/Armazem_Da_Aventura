@@ -20,7 +20,7 @@
   <input class="pergunta" type="text" name="nome_personagem"><br>
 
    <label>Carregar imagem:</label><br>
-    <input type="file" class="pergunta" name="avatar_personagem" id="avatar_personagem" accept="image/*" required><br>
+    <input type="file" class="pergunta" name="avatar_personagem" id="avatar_personagem" accept="image/*" ><br>
 
     <label>Imagem de perfil:</label><br>
     <img id="preview" class="pergunta preview_img"
@@ -31,10 +31,14 @@
   <!-- <label>Avatar:</label><br>
   <input class="pergunta" type="file" name="avatar_personagem" required><br> -->
   <label>Raça:</label><br>
-  <input class="pergunta" type="text" name="raca" required><br>
-  <label>Classe:</label><br>
-  
+  <select name="raca" class="pergunta" required>
+    <option value="">Selecione...</option>
+      {% for r in todas_racas %}
+        <option value="{{ r.nome_raca }}">{{ r.nome_raca }}</option>
+      {% endfor %}
+  </select><br>
 
+  <label>Classe:</label><br>
   <label for="classe">Escolha a classe:</label>
   <input list="classes" name="classe" id="classe"  autocomplete="off" required>
   <datalist id="classes">

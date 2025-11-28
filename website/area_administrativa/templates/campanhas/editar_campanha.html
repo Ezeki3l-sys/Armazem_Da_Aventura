@@ -13,6 +13,21 @@
   {% csrf_token %}
   <label>Nome:</label><br>
   <input type="text" name="nome_campanha" class="pergunta" value="{{campanha.nome_campanha}}" required><br>
+    <label>Gêneros da Campanha:</label><br>
+
+    <div class="checkbox-container">
+    {% for genero in todos_generos %}
+        <label class="checkbox-item">
+    <input type="checkbox" 
+       name="genero" 
+       value="{{ genero.id }}"
+       {% if genero in campanha.generos.all %}checked{% endif %}>
+        {{ genero.nome_genero }}
+    </label><br>
+    {% empty %}
+        <p>Nenhum gênero cadastrado.</p>
+    {% endfor %}
+    </div>  
   <label>Carregar imagem:</label><br>
     <input type="file" class="pergunta" name="imagem_de_capa" id="imagem_de_capa" accept="image/*" required><br>
 
@@ -26,6 +41,12 @@
   <input type="date" class="pergunta" name="data_fim" value="{{campanha.data_fim}}" required><br>
   <label>Descrição:</label><br>
   <textarea class="pergunta" name="descricao">{{campanha.descricao}}</textarea><br>
+    
+  <label>A campanha fica visivel para todos as pessoas?</label><br>
+    <input type="checkbox" name="publico" value="1" 
+        {% if campanha.publico %}checked{% endif %}>
+    Público<br><br>
+
   <button type="submit" class="btn btn-primary">Salvar</button>
 </form>
 

@@ -1,7 +1,15 @@
 {% extends 'base.html' %}
 {% block 'title' %}Gerenciar solicitações{% endblock %}
 {% block 'conteudo' %}
-<table class="table table-striped">
+<h2>Solicitações para a campanha {{campanha.nome_campanha}}</h2>
+<p>Aqui estão as solicitações dos jogadores que desejam participar da sua campanha. Você pode aprovar ou reprovar cada solicitação.</p>
+<!--
+//TODO: Adicionar paginação caso tenha muitas solicitações
+//TODO: Adicionar um filtro para mostrar apenas solicitações pendentes, aprovadas ou reprovadas
+//TODO: Adicionar uma confirmação via modal antes de aprovar ou reprovar uma solicitação  
+-->
+<div class="table-responsive">
+  <table class="table table-striped">
     <thead> 
       <tr>
         <th scope="col">#</th>
@@ -39,4 +47,5 @@
     {% endfor %}
     </tbody>
   </table>
+</div>  
 {% endblock %}

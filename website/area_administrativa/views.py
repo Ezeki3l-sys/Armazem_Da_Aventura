@@ -5,19 +5,15 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.messages import constants
-from .models import Personagem, Classe, Campanha, Usuario, PedidoParticipacaoCampanha, CampanhaJogador
+from .models import Personagem, Classe, Campanha, Raca, Usuario, PedidoParticipacaoCampanha, CampanhaJogador, Raca, GeneroCampanha
 from datetime import datetime
 import json
 from django.conf.urls.static import static
-from website.settings import STATIC_URL
+from website.settings import MEDIA_URL
 import os
 
 from django.core.serializers.json import DjangoJSONEncoder
-AVATAR_DEFAULT =  os.path.join(STATIC_URL, 'img/default-avatar.jpg')
-# Create your views here.
-# def home(request):
-#     return HttpResponse(f"<h1>Hello</h1>")
-
+AVATAR_DEFAULT = 'avatar/default-avatar.png'
 
 @login_required
 def home(request):
@@ -26,6 +22,8 @@ def home(request):
     quantidade_solicitacoes = PedidoParticipacaoCampanha.objects.filter(mestre=request.user).filter(status='P').count()
     quantidade_solicitacoes_jogador = PedidoParticipacaoCampanha.objects.filter(personagem__usuario=request.user).count()
     return render(request, "index-area-restrita.html", {'personagens': meus_personagens,'campanhas': minhas_campanhas,'quantidade_solicitacoes':quantidade_solicitacoes, 'quantidade_solicitacoes_jogador': quantidade_solicitacoes_jogador, 'AVATAR_DEFAULT':AVATAR_DEFAULT})
+
+
 @login_required
 def editar_perfil(request, id):
     usuario = get_object_or_404(Usuario, id=id)
@@ -57,15 +55,20 @@ def meus_personagens(request):
 
 @login_required
 def cadastrar_personagem(request):
-    print(STATIC_URL)
     if request.method == 'POST':
         nome = request.POST.get('nome_personagem')
         avatar = request.FILES.get('avatar_personagem')
-        raca = request.POST.get('raca')
+        var_raca = request.POST.get('raca')
         var_classe = request.POST.get('classe')
         historia = request.POST.get('historia')
 
-        instancia_classe = Classe.objects.get(nome_classe=var_classe)
+        try:
+            instancia_raca = Raca.objects.get(nome_raca=var_raca)
+            instancia_classe = Classe.objects.get(nome_classe=var_classe)
+        except:
+            messages.error(request, "Classe ou raça inválida!")
+            return redirect("cadastrar_personagem")
+
 
         if not(avatar):
             avatar = AVATAR_DEFAULT
@@ -74,15 +77,17 @@ def cadastrar_personagem(request):
             usuario=request.user,
             nome_personagem=nome,
             avatar_personagem=avatar,
-            raca=raca,
+            raca=instancia_raca,
             classe=instancia_classe,
             historia=historia
         )
+        personagem.save()
         messages.success(request, f'Personagem {personagem.nome_personagem} cadastrado com sucesso!')
         return redirect('meus_personagens')
     
     classes  = Classe.objects.all()
-    return render(request, 'personagens/cadastrar.html', {'toda_classes':classes })
+    racas = Raca.objects.all()  
+    return render(request, 'personagens/cadastrar.html', {'toda_classes':classes, 'todas_racas': racas })
 
 @login_required
 def editar_personagem(request, id):
@@ -112,6 +117,7 @@ def deletar_personagem(request, id):
         messages.success(request, f'Personagem {personagem.nome_personagem} deletado com sucesso!')
         return redirect('meus_personagens')
     return render(request, 'personagens/confirmar_exclusao.html', {'personagem': personagem})
+
 
 
 
@@ -172,7 +178,12 @@ def cadastrar_campanha(request):
         descricao = request.POST.get('descricao')
         dt_inicio = request.POST.get('data_inicio')
         dt_fim = request.POST.get('data_fim')
-        
+        generos_ids = request.POST.getlist("genero")  # <-- AQUI!!!
+
+        if len(generos_ids) == 0:
+            messages.error(request, "Selecione pelo menos um gênero!")
+            return redirect('cadastrar_campanha')
+
         campanha = Campanha.objects.create(
             mestre=request.user,
             nome_campanha=nome_campanha,
@@ -181,10 +192,15 @@ def cadastrar_campanha(request):
             data_inicio=dt_inicio,
             data_fim=dt_fim
         )
+        generos = GeneroCampanha.objects.filter(id__in=generos_ids)
+        campanha.generos.add(*generos)
+        campanha.save()
         messages.success(request, f'Campanha {campanha.nome_campanha} cadastrado com sucesso!')
         return redirect('minhas_campanhas')
     else:
-        return render(request, 'campanhas/cadastrar-campanha.html')
+        todos_generos = GeneroCampanha.objects.all()
+
+        return render(request, 'campanhas/cadastrar-campanha.html', {'todos_generos': todos_generos})
     
 @login_required
 def excluir_campanha(request, id):
@@ -198,17 +214,32 @@ def excluir_campanha(request, id):
 @login_required
 def editar_campanha(request, id):
     campanha = get_object_or_404(Campanha, id=id)
-    if request.method == 'POST':
-        campanha.nome_campanha = request.POST.get('nome_campanha')
-        if request.FILES.get('imagem_de_capa'):
-            campanha.imagem_de_capa = request.FILES.get('imagem_de_capa')
-        campanha.data_inicio = request.POST.get('data_inicio')
-        campanha.data_fim = request.POST.get('data_fim')
-        campanha.descricao = request.POST.get('descricao')
+    todos_generos = GeneroCampanha.objects.all()
+
+    if request.method == "POST":
+        campanha.nome_campanha = request.POST.get("nome_campanha")
+        campanha.descricao = request.POST.get("descricao")
+        campanha.data_inicio = request.POST.get("data_inicio")
+        campanha.data_fim = request.POST.get("data_fim")
+        campanha.publico = bool(request.POST.get("publico"))
+
+        # Atualizar imagem de capa (somente se o user enviar)
+        if "imagem_de_capa" in request.FILES:
+            campanha.imagem_de_capa = request.FILES["imagem_de_capa"]
+
         campanha.save()
+
+        # Atualizar gêneros selecionados
+        generos_ids = request.POST.getlist("genero")  # lista de IDs em string
+        campanha.generos.set(generos_ids)  # Django faz o resto        
         messages.success(request, f'Campanha {campanha.nome_campanha} atualizada com sucesso!')
         return redirect('minhas_campanhas')
-    return render(request, 'campanhas/editar_campanha.html', {'campanha': campanha})
+    contexto = {
+        "campanha": campanha,
+        "todos_generos": todos_generos
+    }
+
+    return render(request, "campanhas/editar_campanha.html", contexto)    
 
 
 

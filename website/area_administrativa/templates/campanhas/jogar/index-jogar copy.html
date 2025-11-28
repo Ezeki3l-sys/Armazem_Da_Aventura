@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block 'title' %}Jogar - {{campanha_jogadores.campanha.nome_campanha}}{% endblock %}
+{% block 'head' %}
+<style>
+    .manuseio{
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        font-size: x-large;
+    }
+    .barra{
+        width: 300px;
+        height: 30px;
+        border-radius: 10px;
+        background-color: #ccc;
+    }
+
+    .numeral{
+        color: white;
+    }
+    .barra .progresso {
+        background-color: red;
+        border-radius: 10px;
+        height: 30px;
+        width: 0%; /* Começa zerado! */
+        transition: width 0.4s ease; /* Fica suave */
+    }
+
+</style>
+{% endblock %}
+{% block 'conteudo' %}
+<div class="geral">
+    <div style="width: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column;" >
+       <div style="display: flex; justify-content: center; align-items: center;">
+            <div class="campanha">
+                <h2>{{ campanha_jogadores.campanha.nome_campanha }} </h2>
+
+                    <div style="display: flex; align-items: center; justify-content: center;">
+                        <img src="{{ campanha_jogadores.campanha.imagem_de_capa.url }}" alt="foto_de_imagem" width="400"><br>
+                    </div>
+
+                    <p>Período: {{ campanha_jogadores.campanha.data_inicio }} | {{ campanha_jogadores.campanha.data_fim }}</p>
+
+                    <p>{{ campanha_jogadores.campanha.descricao }}</p>
+
+                    <hr>
+                    <p><strong>Personagem:</strong> {{ campanha_jogadores.personagem.nome_personagem}}</p>
+                    <p><strong>Raça:</strong> {{ campanha_jogadores.personagem.raca }}</p>
+                    <p><strong>Classe:</strong> {{ campanha_jogadores.personagem.classe }}</p>
+                    <p><strong>Experiência:</strong> {{ campanha_jogadores.experiencia }}</p>
+                    {% comment %} <p><strong>Vida Atual:</strong> {{ campanha_jogadores.vida_atual }}/{{ campanha_jogadores.personagem.vida}}</p> {% endcomment %}
+
+                    <div class="manuseio">
+                        <button onclick="progressao(10,'-')">-10</button>
+                        <button onclick="progressao(5,'-')">-5</button>
+                        <button onclick="progressao(1,'-')">-1</button>
+                            <div class="barra">
+                                <div class="progresso" id="progresso-barra"></div>
+                                <div class="numeral">{{campanha_jogadores.vida_atual}}</div>
+                            </div>
+                        <button onclick="progressao(1,'+')">+1</button>
+                        <button onclick="progressao(5,'+')">+5</button>
+                        <button onclick="progressao(10,'+')">+10</button>
+                        <button class="btn btn-primary" onclick="salvarVida()">Salvar informação vida</button>
+                    </div>
+            </div>          
+       </div>
+        
+        <div id="container">
+            <h1>Rolagem de dados</h1>
+            <div id="dados">
+                <img onclick="Rolar(4)" src="{% static 'img/d4.png' %}" width="50px" alt="">
+                <img onclick="Rolar(6)" src="{% static 'img/d6.png' %}" width="50px" alt="">
+                <img onclick="Rolar(8)" src="{% static 'img/d8.png' %}" width="50px" alt="">
+                <img onclick="Rolar(10)" src="{% static 'img/d10.svg' %}" width="50px" alt="">
+                <img onclick="Rolar(12)" src="{% static 'img/d12.png' %}" width="50px" alt="">
+                <img onclick="Rolar(20)" src="{% static 'img/d20.png' %}" width="50px" alt="">
+            </div>
+            
+            <label for="numero_de_dados">N. de dados</label>
+            <input type="number" id="numero_de_dados" value="1" min="1" max="40"></input>
+            <div id="resultado_do_dado"></div>
+            <div id="soma_dos_dados"></div>
+        </div>
+    </div>
+    
+    <div class=" m-3 p-3" >
+        <div>
+            <article class="cenas_descricao">
+                <section>
+                    <form class="formulario" name="anotacoes_jogador_form" method="post" action="" article-aria-label="Anotações do Jogador">
+                        {% csrf_token %}
+                        <h3 class="letra_grande">ANOTAÇÕES: <h4 id="cena_atual_titulo" class="letra_pequena"></h4></h3><br>
+                        <div class="form-floating">
+                            <textarea class="form-control" name="anotacao_jogador" placeholder="Comente sobre sua cena aqui!" id="anotacao_jogador" style="height: 400px; width: 400px;">teste testado!!!</textarea>
+                        </div>
+                        <button type="submit" class="botao">Salvar</button>
+                    </form> 
+                </section>
+            </article>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+const progresso = document.querySelector('.barra .progresso')
+let porcent = {{campanha_jogadores.vida_atual}};
+let total = {{campanha_jogadores.personagem.vida}};
+let tag_div = document.querySelector('.numeral')
+
+// Atualiza o numeral
+tag_div.innerText = `${porcent}/${total}`;
+
+// Calcula porcentagem inicial
+let inicial = Math.round(porcent * 100 / total);
+
+// Aplica a largura da barra
+progresso.style.width = inicial + '%';
+
+
+    
+    function progressao(numero, sinal) {
+        if (sinal == '-') {
+            porcent -= numero;
+        } else {
+            porcent += numero;
+        }
+
+        // Limites
+        if (porcent < 0) porcent = 0;
+        if (porcent > total) porcent = total;
+
+        // Calcula %
+        let x = Math.round(porcent * 100 / total);
+
+        // Atualiza barra
+        progresso.style.width = x + '%';
+
+        // Atualiza texto (5/10)
+        tag_div.innerText = `${porcent}/${total}`;
+    }
+
+        
+    function Rolar(dado){
+        const numDeDados = document.getElementById('numero_de_dados').value;
+        const resultado = document.getElementById('resultado_do_dado');
+        const somaDosDados = document.getElementById('soma_dos_dados');
+        let somagem = 0
+        const valores = [];
+        if(numDeDados>40){
+            resultado.textContent = "O limite de dados é 40."
+            
+        }
+        else{
+            for(let i = 0; i < numDeDados; i++){
+                const valor = Math.floor(Math.random() * dado) +1;
+                valores.push(valor);
+                somagem += valores[i];
+            }
+
+            resultado.textContent = `Dado(s): ${valores.join(', ')}`
+            somaDosDados.textContent =  `Soma: ${somagem}` 
+        }
+        
+    }
+
+    {% url 'salvar_vida_jogador' 0 0 as salvar_vida_base %}
+    {% url 'jogar_campanha' 0 as jogar_campanha_base %}
+    function salvarVida() {
+        const numeral = document.querySelector('.numeral');
+        const vidaAtual = numeral.textContent.trim();
+        const campanhaId = "{{ campanha_jogadores.campanha.id }}"; // ou campanha_jogadores.campanha.id
+
+        const urlSalvar = "{{ salvar_vida_base }}".replace('/0/0/', `/${campanhaId}/${vidaAtual}/`);
+        const urlRedirecionar = "{{ jogar_campanha_base }}".replace('/0/', `/${campanhaId}/`);
+
+        fetch(urlSalvar)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "ok") {
+                window.location.href = data.redirect_url; // redireciona
+            } else {
+                alert("Erro ao salvar vida!");
+            }
+        })
+        .catch(err => console.error("Erro:", err));
+
+    }
+
+
+</script>
+
+
+{% endblock %}

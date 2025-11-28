@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block 'title' %}Pedido{% endblock %}
 {% block 'conteudo' %}
+//TODO: Colocar uma lista horizontal com miniaturas das imagens dos personagem para escolher qual personagem vai utilizar na campanha
 <h2>Deseja realmente participar da campanha {{campanha.nome_campanha}}?</h2>
 <p>O Mestre será notificado que você deseja participar e ele fará ou não aprovação</p>
 <form method="POST" class="formulario">
@@ -14,7 +15,7 @@
       <option>Nenhum personagem foi cadastro ainda</option>      
     {% endfor%}
   </select>
-  <textarea class="pergunta" id="mensagem" name="mensagem" rows="4" cols="50"></textarea>
+  <textarea class="pergunta" id="mensagem" name="mensagem" rows="4" cols="50" placeholder="Faça um pedido razoável para o Mestre"></textarea>
   <button type="submit" class="botao">Sim, desejo partcipar</button>
   <a href="{% url 'explorar_campanhas' %}" class="btn btn-secondary">Cancelar</a>
 </form>

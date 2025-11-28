@@ -1,138 +1,293 @@
 {% extends "base.html" %}
-
 {% load static %}
 
 {% block 'title' %}Detalhes da Campanha : {{campanha.nome_campanha}}{% endblock %}
+
 {% block 'head' %}
 <style>
-    .manuseio{
-        display: flex;
-        justify-content: center;
-        text-align: center;
-        font-size: x-large;
-    }
-    .barra{
-        width: 300px;
-        height: 30px;
-        border-radius: 10px;
-        background-color: #ccc;
-    }
-    .barra .progresso{
-        background-color: red;
-        border-radius: 10px;
-        width: 100%;
-        height: 30px;
-    }
-    .numeral{
-        color: white;
-    }
+
+/* ============================
+      TEMA ESTILO ZELDA
+============================ */
+body {
+    background: url("{% static 'img/bg-zelda.jpg' %}") center/cover fixed;
+}
+
+/* GERAL: GRID LINDO E CENTRALIZADO */
+.layout-grid {
+    display: grid;
+    grid-template-columns: 300px minmax(650px, 1fr) 400px;
+    gap: 25px;
+    padding: 20px;
+    width: 100%;
+    max-width: 1600px;
+    margin: auto;
+}
+
+/* ============================
+      PAINEL DOS JOGADORES
+============================ */
+.col-jogadores {
+    background: rgba(20, 20, 20, 0.85);
+    padding: 18px;
+    border-radius: 14px;
+    border: 3px solid #3b8a3e;
+    box-shadow: 0 0 12px #3b8a3e;
+    height: fit-content;
+}
+/* Scroll para lista de jogadores */
+.col-jogadores {
+    max-height: 85vh;        /* evita quebrar layout */
+    overflow-y: auto;
+}
+
+/* Barra de scroll Zelda */
+.col-jogadores::-webkit-scrollbar {
+    width: 10px;
+}
+.col-jogadores::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 10px;
+}
+.col-jogadores::-webkit-scrollbar-thumb {
+    background: #3b8a3e;
+    border-radius: 10px;
+}
+.col-jogadores::-webkit-scrollbar-thumb:hover {
+    background: #46a64a;
+}
+
+.col-jogadores img {
+    border-radius: 100%;
+    border: 3px solid #3b8a3e;
+    margin-bottom: 10px;
+}
+
+.progress {
+    height: 26px;
+    background: #1d1d1d;
+    border: 2px solid #3b8a3e;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.progress .progresso {
+    background: linear-gradient(90deg, #4bff54, #2eb82e);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================
+   COLUNA CENTRAL — CAMPANHA
+============================ */
+.col-campanha {
+    background: rgba(20, 20, 20, 0.8);
+    padding: 25px;
+    border-radius: 14px;
+    border: 3px solid #3b8a3e;
+    box-shadow: 0 0 12px #3b8a3e;
+}
+
+.col-campanha h2 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.col-campanha img {
+    border-radius: 10px;
+    border: 2px solid #3b8a3e;
+    max-width: 500px;
+    width: 100%;    
+}
+
+/* Dados */
+#dados img {
+    cursor: pointer;
+    margin: 6px;
+}
+
+/* ============================
+   COLUNA DIREITA — CENAS
+============================ */
+.col-cenas {
+    background: rgba(20, 20, 20, 0.85);
+    padding: 25px;
+    border-radius: 14px;
+    border: 3px solid #3b8a3e;
+    box-shadow: 0 0 12px #3b8a3e;
+}
+/* Limita o espaço das cenas e adiciona scroll */
+#id_cenas {
+    max-height: 45vh;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* Scroll Zelda */
+#id_cenas::-webkit-scrollbar {
+    width: 10px;
+}
+#id_cenas::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 10px;
+}
+#id_cenas::-webkit-scrollbar-thumb {
+    background: #3b8a3e;
+    border-radius: 10px;
+}
+#id_cenas::-webkit-scrollbar-thumb:hover {
+    background: #46a64a;
+}
+
+
+.borda_cenas_descricao {
+    background: #2d2d2d;
+    padding: 12px;
+    border: 2px solid #3b8a3e;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.borda_cenas_descricao:hover {
+    background: #414141;
+}
+
+.botao {
+    background: #3b8a3e;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+}
+
+.botao:hover {
+    background: #46a64a;
+}
+
+/* Textarea */
+.form-control {
+    background: #2f2f2f !important;
+    color: white !important;
+}
+/* --- CORRIGE AS IMAGENS DOS DADOS --- */
+.rolagem-dados {
+    text-align: center;
+    background: #0b2e13;
+    border: 3px solid #145c2b;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 0 12px #14ff6a55 inset;
+}
+
+.rolagem-dados img {
+    width: 50px;
+    height: 40px; /* tamanho bonito estilo Zelda */
+    object-fit: contain;
+    image-rendering: pixelated; /* deixa estilo retrô */
+    margin: 2px;
+}
+
 
 </style>
 {% endblock %}
+
 {% block 'conteudo' %}
-<div class="geral campanha_coluna_ou_linha">
-    <div style="width: 50%;">
-       <div>
-        <div class="campanha campanha_coluna_ou_linha">
-            <h2>{{campanha.nome_campanha}}</h2>
-            <div style="display: flex; align-items: center; justify-content: center;">
-                <!-- <div style="display: flex; flex-direction: column;">
-                    <a href="{% url 'editar_campanha' campanha.id %}" class="btn btn-warning">Editar</a>
-                    <a href="{% url 'excluir_campanha' campanha.id %}" class="btn btn-danger">Deletar</a>
-                    <a href="{% url 'minhas_campanhas' %}" class="btn btn-secondary">Voltar</a>
-                </div> -->
-                <div><img src="{{campanha.imagem_de_capa.url}}" alt="foto_de_imagem" width="400"><br></div>
-            </div>
-            <p>Data de início:{{campanha.data_inicio}}</p>
-            <p>Data de fim: {{campanha.data_fim}}</p>
-            <p>{{campanha.descricao}}</p>
-            
-        </div>
-       </div>
-        
-        <div style="padding: 0px;" id="container">
-            <h1>Rolagem de dados</h1>
-            <div id="dados">
-                <img onclick="Rolar(4)" src="{% static 'img/d4.png' %}" width="50px" alt="">
-                <img onclick="Rolar(6)" src="{% static 'img/d6.png' %}" width="50px" alt="">
-                <img onclick="Rolar(8)" src="{% static 'img/d8.png' %}" width="50px" alt="">
-                <img onclick="Rolar(10)" src="{% static 'img/d10.svg' %}" width="50px" alt="">
-                <img onclick="Rolar(12)" src="{% static 'img/d12.png' %}" width="50px" alt="">
-                <img onclick="Rolar(20)" src="{% static 'img/d20.png' %}" width="50px" alt="">
-            </div>
-            
-            <label for="numero_de_dados">N. de dados</label>
-            <input type="number" id="numero_de_dados" value="1" min="1" max="40"></input>
-            <div id="resultado_do_dado"></div>
-            <div id="soma_dos_dados"></div>
-        </div>
-    </div>
-    <div style="padding: 50px;">
-    <!-- TENHO QUE ARRUMAR A PARTE DA DESCRIÇÃO/CENA PARA O MOBILE -->
-        <div class="borda_sessoes total_sessoes_cenas">
-            <div class="sessoes">
-                <button class="botao" onclick="mudar_sessao(-1)">&lt;</button>
-                <h2 id="titulo_sessao" class="class_nome_da_campanha">SESSÃO 0</h2>
-                <button class="botao" onclick="mudar_sessao(1)">&gt;</button>
-            </div>
-            <div class="sessoes">
-                <button class="botao" onclick="criar_sessao()">Criar Sessão</button>
-            </div>
-        
-            <div>
-                <article class="cenas_descricao">
-                    <section class="gordura_da_cena">
-                        <h3 class="letra_grande">CENAS</h3>
-                        <button class="botao" id="id_criar_cena">CRIAR CENA</button><br><br>
-                        <div id="id_cenas">
-                        </div>
-                    </section>
-        
-                <section>
-                    <div>
-                        <h3 class="letra_grande">VOCÊ ESTÁ NA: <h4 id="cena_atual_titulo" class="letra_pequena"></h4></h3><br>
-                            <div class="form-floating">
-                                <textarea class="form-control" placeholder="Comente sobre sua cena aqui!" id="descricao_cena" style="height: 300px; width: 300px;">teste testado!!!</textarea>
-                                <label for="descricao_cena">Comente sobre sua cena aqui!</label>
-                            </div>
-                    </div>
-        
-        
-                </section>
-                </article>
-            </div>
-        </div>
-    </div>
-</div>
-<div style="max-width: min-content;" class="borda_sessoes">
+
+<div class="layout-grid">
+
+    <!-- ==================================
+         COLUNA 1 — JOGADORES
+    =================================== -->
+    <div class="col-jogadores">
         {% for j in jogadores %}
-        <img width="100px" height="100px" src="{{j.personagem.avatar_personagem.url}}" alt="Avatar" class="rounded-circle" />
-        <p>{{j.personagem.nome_personagem}}</p>
-        <p>Jogador({{j.personagem.usuario}})</p>
-        <p>{{j.personagem.raca}}</p>
-        <p>{{j.personagem.classe}}</p>
-        <div class="progress">
-            {% widthratio j.vida_atual j.personagem.vida 100 as vida_percent %}
+            <img src="{{ j.personagem.avatar_personagem.url }}"
+                 width="100" height="100">
 
-            <div class="progresso progress-bar"  id="progressao-{{j.id}}"role="progressbar" style="width: {{ vida_percent  }}%;"  aria-valuenow="{{j.vida_atual}}" aria-valuemin="0" aria-valuemax="{{j.personagem.vida}}">{{j.vida_atual}}/{{j.personagem.vida}}</div>
-        </div> 
-        {% endfor %}  
+            <p><b>{{j.personagem.nome_personagem}}</b></p>
+            <p>Jogador: {{j.personagem.usuario}}</p>
+            <p>{{j.personagem.raca}} — {{j.personagem.classe}}</p>
+
+            {% widthratio j.vida_atual j.personagem.vida 100 as vida_percent %}
+            <div class="progress">
+                <div class="progresso" style="width: {{vida_percent}}%;">
+                    {{j.vida_atual}} / {{j.personagem.vida}}
+                </div>
+            </div>
+
+        {% endfor %}
     </div>
 
+    <!-- ==================================
+         COLUNA 2 — CAMPANHA CENTRAL
+    =================================== -->
+    <div class="col-campanha">
+
+        <h2>{{campanha.nome_campanha}}</h2>
+
+        <center>
+            <img src="{{campanha.imagem_de_capa.url}}">
+        </center>
+
+        <p>Início: {{campanha.data_inicio}}</p>
+        <p>Fim: {{campanha.data_fim}}</p>
+        <p>{{campanha.descricao}}</p>
+
+        <hr>
+
+        <h1>Rolagem de Dados</h1>
+
+        <div class="rolagem-dados" id="dados">
+            <img onclick="Rolar(4)" src="{% static 'img/d4.png' %}" width="50">
+            <img onclick="Rolar(6)" src="{% static 'img/d6.png' %}" width="50">
+            <img onclick="Rolar(8)" src="{% static 'img/d8.png' %}" width="50">
+            <img onclick="Rolar(10)" src="{% static 'img/d10.svg' %}" width="50">
+            <img onclick="Rolar(12)" src="{% static 'img/d12.png' %}" width="50">
+            <img onclick="Rolar(20)" src="{% static 'img/d20.png' %}" width="50">
+        </div>
+
+        <label>Nº de dados</label>
+        <input type="number" id="numero_de_dados" value="1" min="1" max="40">
+
+        <div id="resultado_do_dado"></div>
+        <div id="soma_dos_dados"></div>
+
+    </div>
+
+    <!-- ==================================
+         COLUNA 3 — CENAS / SESSÕES
+    =================================== -->
+    <div class="col-cenas">
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="botao" onclick="mudar_sessao(-1)">&lt;</button>
+            <h2 id="titulo_sessao">SESSÃO 0</h2>
+            <button class="botao" onclick="mudar_sessao(1)">&gt;</button>
+        </div>
+
+        <button style="margin-top:10px;" class="botao" onclick="criar_sessao()">Criar Sessão</button>
+
+        <hr>
+
+        <h3 style="color:white;">CENAS</h3>
+        <button class="botao" id="id_criar_cena">Criar Cena</button>
+
+        <div id="id_cenas"></div>
+
+        <hr>
+
+        <h3 style="color:white;">Cena Selecionada:</h3>
+        <h4 id="cena_atual_titulo" style="color:#ccc;"></h4>
+
+        <textarea class="form-control" id="descricao_cena" style="height: 300px;"></textarea>
+
+    </div>
+
+</div>
 <script>
-    const progresso = document.querySelector('.barra .progresso')
-    
-    let vida_atual_sujeito = document.querySelector('.numeral')
-    let vida_maxima_sujeito = document.querySelector('.numeral2')
-    let porcent = vida_atual_sujeito.innerText
-    let total = vida_maxima_sujeito.innerText
-
-    
-    function progressao(idJogador){
-
-        progresso.setAttribute('style','width:'+ porcent +'%')
-    }
-
     {% url 'salvar_anotacao_mestre' 0 as salvar_anotacao_base %}
     
      const campanhaLista = JSON.parse(`{{ minhas_campanhas_json|escapejs|safe }}`);

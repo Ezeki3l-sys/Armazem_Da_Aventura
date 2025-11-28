@@ -12,14 +12,25 @@ class Classe(models.Model):
 
     def __str__(self):
         return self.nome_classe
-    
 
+
+class Raca(models.Model):
+    nome_raca = models.CharField(verbose_name ="raça",max_length=100, blank=True, null=True,)
+
+    class Meta:
+        verbose_name_plural = 'Raças'
+        verbose_name = 'Raças'
+        ordering = ('nome_raca',)
+
+    def __str__(self):
+        return self.nome_raca
+ 
 
 class Personagem(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING, blank = True, null = True)
     nome_personagem = models.CharField(verbose_name ="personagem",max_length=50, blank=False, null=False,)
-    avatar_personagem = models.ImageField(verbose_name ="avatar", upload_to='personagens/', default="avatar/default-avatar.jpg")
-    raca = models.CharField(verbose_name ="raça",max_length=50, blank=True, null=True,)
+    avatar_personagem = models.ImageField(verbose_name ="avatar", upload_to='personagens/')
+    raca = models.ForeignKey(Raca, on_delete=models.DO_NOTHING, blank = True, null = True, related_name="personagens" )
     classe = models.ForeignKey(Classe, on_delete=models.DO_NOTHING, blank = True, null = True, related_name="personagens" )
     vida = models.PositiveIntegerField(verbose_name='vida',blank=False,null=False, default=10)
     #classe = models.CharField(verbose_name ="classe",max_length=100, blank=True, null=True,)
@@ -32,12 +43,25 @@ class Personagem(models.Model):
 
     def __str__(self):
         return self.nome_personagem
+
+#//TODO: Adicionar na model Campanha um campo para gêmero de campanha (Fantasia, Ficção Científica, Terror, etc). Precisa criar uma model para gênero.    
+#//TODO: Colocar uma imagem default para caso o Usuário não coloque imagem para a campanha
+
+class GeneroCampanha(models.Model):
+    nome_genero = models.CharField(verbose_name ="gênero",max_length=50, blank=False, null=False,)
+
+    class Meta:
+        verbose_name_plural = 'Gêneros de Campanha'
+        verbose_name = 'Gênero de Campanha'
+        ordering = ('nome_genero',)
+
+    def __str__(self):
+        return self.nome_genero
     
 class Campanha(models.Model):
         mestre = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING, blank = True, null = True)
         nome_campanha = models.CharField(verbose_name ="campanha",max_length=50, blank=False, null=False,)
         imagem_de_capa = models.ImageField(verbose_name ="imagem", upload_to='campanhas/')
-        # Colocar uma imagem default para caso o Usuário não coloque imagem para a campanha
         descricao = models.TextField(verbose_name ="descricao",max_length=1000, blank=True, null=True,)
         data_inicio = models.DateField(blank = False, null = False )
         data_fim = models.DateField(blank=True, null= True)
@@ -45,6 +69,12 @@ class Campanha(models.Model):
         publico = models.BooleanField(default=True)
         ativo = models.BooleanField(default=True)
 
+        generos = models.ManyToManyField(
+            GeneroCampanha,
+            related_name='campanhas',
+            verbose_name='gêneros',
+            blank=True,
+        )
 
         class Meta:
              verbose_name_plural = 'Campanhas'

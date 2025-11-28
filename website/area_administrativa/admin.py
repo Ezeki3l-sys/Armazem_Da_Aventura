@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Personagem, Classe, Campanha, PedidoParticipacaoCampanha, CampanhaJogador
+from .models import Personagem, Classe, Campanha, PedidoParticipacaoCampanha, CampanhaJogador, Raca, GeneroCampanha
 
 class PersonagemModelAdmin(admin.ModelAdmin):
     list_display = ['nome_personagem','usuario','avatar_personagem','raca','classe',]
@@ -10,9 +10,8 @@ class PersonagemModelAdmin(admin.ModelAdmin):
 admin.site.register(Personagem,PersonagemModelAdmin)
 
 admin.site.register(Classe)
-
-
-
+admin.site.register(Raca)
+admin.site.register(GeneroCampanha)
 admin.site.register(Campanha)
 
 

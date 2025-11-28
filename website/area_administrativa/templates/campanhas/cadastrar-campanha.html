@@ -1,6 +1,33 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block 'title' %}Cadastrar Campanha{% endblock %}
+{%block   'head'%}
+<style>
+    .checkbox-container {
+    margin-top: 8px;
+    margin-bottom: 15px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 1rem;
+    color: #f1e7c8; /* cor estilo pergaminho */
+    background: rgba(0,0,0,0.3);
+    padding: 4px 10px;
+    border-radius: 6px;
+    width: fit-content;
+    cursor: pointer;
+}
+
+.checkbox-item input[type="checkbox"] {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+</style>
+{% endblock%}
 {% block 'conteudo' %}
 {% if messages %}
 {% for message in messages %}
@@ -16,13 +43,27 @@
   <input type="hidden" name="user" value={{user.username}}>
   <label>Nome:</label><br>
   <input class="pergunta" type="text" name="nome_campanha" required><br>
+
+    <label>Gêneros da Campanha:</label><br>
+
+    <div class="checkbox-container">
+    {% for genero in todos_generos %}
+        <label class="checkbox-item">
+        <input type="checkbox" name="genero" value="{{ genero.id }}">
+        {{ genero.nome_genero }}
+        </label><br>
+    {% empty %}
+        <p>Nenhum gênero cadastrado.</p>
+    {% endfor %}
+    </div>
+
   <label>Descrição:</label><br>
   <input class="pergunta" type="text" name="descricao" required><br>
 
     <label>Carregar imagem:</label><br>
     <input type="file" class="pergunta" name="imagem_de_capa" id="imagem_de_capa" accept="image/*" required><br>
-
-    <label>Imagem de perfil:</label><br>
+//TODO: Colocar uma imagem default para caso o Usuário não coloque imagem para a campanha e corrigir as termologias
+    <label>Imagem de capa:</label><br>
     <img id="preview" class="preview_img"
         src="{% if campanha.imagem_de_capa %}{{ campanha.imagem_de_capa.url }}{% else %}{% static 'img/default-avatar.png' %}{% endif %}"
         alt="Avatar do Personagem" /><br>
@@ -33,7 +74,7 @@
   <label>Data de Início:</label><br>
   <input class="pergunta" type="date" name="data_inicio" required><br>
   <label>Data do Fim:</label><br>
-  <input class="pergunta" type="date" name="data_fim " required><br>
+  <input class="pergunta" type="date" name="data_fim " ><br>
 <br>
 
   <button  type="submit" class="botao">Cadastrar Campanha</button>
